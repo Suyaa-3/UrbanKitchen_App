@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyCHAAf79ESX7I7Bx00c4kRmc5sidlBiI1A</string>
+	<key>GCM_SENDER_ID</key>
+	<string>677754514589</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.kasirurban.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>urbankitchen-71bd0</string>
+	<key>STORAGE_BUCKET</key>
+	<string>urbankitchen-71bd0.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:677754514589:ios:21d2096bbc6b2ba2b97874</string>
+</dict>
+</plist>
