@@ -179,7 +179,8 @@ class _KasirMinumanState extends State<KasirMinuman> {
                         return InkWell(
                           onTap: () {
                             setState(() {
-                              switchValues[index] = !switchValues[index];
+                              switchValuesMinuman[index] =
+                                  !switchValuesMinuman[index];
                               if (switchValuesMinuman[index]) {
                                 // Jika switch aktif, tambahkan item ke dalam cart
 

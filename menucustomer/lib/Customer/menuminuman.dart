@@ -183,16 +183,19 @@ class _MenuListState extends State<MenuList> {
                                 child: Stack(children: [
                               GestureDetector(
                                 onTap: () {
+                                  print('GestureDetector tapped');
                                   if (!isExpanded) {
                                     setState(() {
                                       isExpanded = true;
                                       selectedCardData = {
                                         'gambar':
-                                            data['gambar'] as String? ?? '',
-                                        'nama': data['nama'] as String? ?? '',
+                                            data['gambar']?.toString() ?? '',
+                                        'nama': data['nama']?.toString() ?? '',
                                         'keterangan':
-                                            data['keterangan'] as String? ?? '',
-                                        'harga': data['harga'] as String? ?? '',
+                                            data['keterangan']?.toString() ??
+                                                '',
+                                        'harga':
+                                            data['harga']?.toString() ?? '',
                                       };
                                       print(
                                           'selectedCardData: $selectedCardData');
@@ -264,27 +267,27 @@ class _MenuListState extends State<MenuList> {
                     width: 350,
                     height: 350,
                     child: Image(
-                      image: AssetImage('assets/images/kopipanas.png'),
+                      image: NetworkImage(selectedCardData?['gambar'] ?? ''),
                     ),
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.only(left: 70),
-                    child: Text("Coffee",
+                    child: Text(selectedCardData?['nama'] ?? '',
                         style: GoogleFonts.getFont('Kavoon',
                             fontSize: 50, color: Colors.white)),
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.only(left: 70, top: 35),
-                    child: Text("Coffee + Sendok",
+                    child: Text(selectedCardData?['keterangan'] ?? '',
                         style: GoogleFonts.getFont('Inter',
                             fontSize: 30, color: Colors.white)),
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
                     margin: EdgeInsets.only(left: 70, top: 35),
-                    child: Text("Rp. 115.000",
+                    child: Text('Rp. ${selectedCardData?['harga'] ?? ''}',
                         style: GoogleFonts.getFont('Inter',
                             fontSize: 30, color: Colors.white)),
                   ),
