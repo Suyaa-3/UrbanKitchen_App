@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:urbankitchen/AdminCabang/ProfilAdminCabang.dart';
+import 'package:urbankitchen/AdminCabang/updatemenu.dart';
 import 'package:urbankitchen/SuperAdmin/SuperAdminHome.dart';
 import 'package:urbankitchen/SuperAdmin/detailadmin.dart';
 import 'package:urbankitchen/akun/login.dart';
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: LoginAdmin());
+        home: UpdateMenu());
   }
 }
 

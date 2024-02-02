@@ -4,8 +4,24 @@ import 'package:kasirurban/Kasir/Struk.dart';
 import 'package:kasirurban/Kasir/kasirmakanan.dart';
 import 'package:kasirurban/Kasir/kasirminuman.dart';
 
+class CartItem {
+  final String documentId;
+  final String gambar;
+  final String nama;
+  final int harga;
+  int jumlah;
+
+  CartItem({
+    required this.documentId,
+    required this.gambar,
+    required this.nama,
+    required this.harga,
+    required this.jumlah,
+  });
+}
+
 class DetailPelanggan extends StatefulWidget {
-  const DetailPelanggan({super.key});
+  const DetailPelanggan({Key? key}) : super(key: key);
 
   @override
   State<DetailPelanggan> createState() => _DetailPelangganState();
@@ -16,6 +32,7 @@ class _DetailPelangganState extends State<DetailPelanggan> {
     _selectedVal = _PembayaranMetodeList[0];
     _Waktupemesanan.text = _getCurrentTime();
   }
+
   final TextEditingController _Waktupemesanan = TextEditingController();
   final TextEditingController _meja = TextEditingController();
   final TextEditingController _nama = TextEditingController();

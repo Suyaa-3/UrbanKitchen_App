@@ -46,6 +46,7 @@ class _MenuListState extends State<MenuList> {
         if (isExpanded) {
           setState(() {
             isExpanded = false;
+            selectedCardData = null; // Reset selected card data when closing
           });
         }
       },
@@ -64,12 +65,14 @@ class _MenuListState extends State<MenuList> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
                   child: IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Keranjang()));
-                      },
+                      onPressed: isExpanded || selectedCardData != null
+                          ? null // Disable button when expanded or selectedCardData is not null
+                          : () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Keranjang()));
+                            },
                       icon: Icon(
                         Icons.shopping_bag_outlined,
                         size: 50,
@@ -98,10 +101,14 @@ class _MenuListState extends State<MenuList> {
                               fontWeight: FontWeight.w500),
                         )),
                   ),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MenuMakanan()));
-                  },
+                  onTap: isExpanded || selectedCardData != null
+                      ? null // Disable button when expanded or selectedCardData is not null
+                      : () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MenuMakanan()));
+                        },
                 ),
                 InkWell(
                   child: Container(
@@ -122,10 +129,14 @@ class _MenuListState extends State<MenuList> {
                               fontWeight: FontWeight.w500),
                         )),
                   ),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => MenuMinuman()));
-                  },
+                  onTap: isExpanded || selectedCardData != null
+                      ? null // Disable button when expanded or selectedCardData is not null
+                      : () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MenuMinuman()));
+                        },
                 ),
                 InkWell(
                   child: Container(
@@ -146,10 +157,12 @@ class _MenuListState extends State<MenuList> {
                               fontWeight: FontWeight.w500),
                         )),
                   ),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Meja()));
-                  },
+                  onTap: isExpanded || selectedCardData != null
+                      ? null // Disable button when expanded or selectedCardData is not null
+                      : () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Meja()));
+                        },
                 ),
               ],
             ),

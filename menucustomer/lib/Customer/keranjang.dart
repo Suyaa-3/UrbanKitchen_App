@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -6,14 +7,91 @@ import 'package:menucustomer/Customer/menumakanan.dart';
 import 'package:menucustomer/Customer/menuminuman.dart';
 import 'package:menucustomer/Customer/struk.dart';
 
+class CartItem {
+  final String documentId;
+  final String gambar;
+  final String nama;
+  final int harga;
+  int jumlah;
+
+  CartItem({
+    required this.documentId,
+    required this.gambar,
+    required this.nama,
+    required this.harga,
+    required this.jumlah,
+  });
+}
+
 class Keranjang extends StatefulWidget {
-  const Keranjang({super.key});
+  const Keranjang({Key? key}) : super(key: key);
 
   @override
   State<Keranjang> createState() => _KeranjangState();
 }
 
 class _KeranjangState extends State<Keranjang> {
+  bool isLoading = true;
+  List<CartItem> cartItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCartItems();
+  }
+
+  Future<void> _fetchCartItems() async {
+    try {
+      var snapshot = await FirebaseFirestore.instance.collection('cart').get();
+      setState(() {
+        cartItems = snapshot.docs.map((doc) {
+          return CartItem(
+            documentId: doc.id,
+            gambar: doc['gambar'],
+            nama: doc['nama'],
+            harga: (doc['harga']),
+            jumlah: (doc['jumlah']),
+          );
+        }).toList();
+        isLoading = false;
+      });
+    } catch (error) {
+      setState(() {
+        isLoading = false;
+      });
+      print('Error loading cart items: $error');
+    }
+  }
+
+  void tambahItemKeCart(CartItem item) async {
+    try {
+      var existingItem = cartItems.firstWhere(
+        (cartItem) => cartItem.nama == item.nama,
+        orElse: () =>
+            CartItem(documentId: '', gambar: '', nama: '', harga: 0, jumlah: 0),
+      );
+
+      if (existingItem.nama.isEmpty) {
+        // If the item is not in the cart, add it to Firestore
+        await FirebaseFirestore.instance.collection('cart').add({
+          'gambar': item.gambar,
+          'nama': item.nama,
+          'harga': item.harga,
+          'jumlah': item.jumlah,
+        });
+      } else {
+        // If the item is already in the cart, update the quantity in Firestore
+        await FirebaseFirestore.instance
+            .collection('cart')
+            .doc(existingItem
+                .documentId) // Assuming you have a documentId field in CartItem
+            .update({'jumlah': existingItem.jumlah + item.jumlah});
+      }
+    } catch (error) {
+      print('Error adding item to cart: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,108 +194,91 @@ class _KeranjangState extends State<Keranjang> {
                 ),
               ],
             ),
-            Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.fromLTRB(100, 50, 0, 0),
-                  height: 200,
-                  width: 500,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(width: 1, color: Colors.grey),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 1,
-                          offset: Offset(1, 2),
-                          spreadRadius: 0,
-                          color: Colors.black,
-                        ),
-                      ]),
-                  child: Row(
-                    children: [
-                      Container(
-                        margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        width: 130,
-                        height: 130,
-                        child: Image(
-                          image: AssetImage('assets/images/burger.png'),
-                        ),
-                      ),
-                      Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.fromLTRB(20, 70, 0, 0),
-                            child: Text("Burger",
-                                style: GoogleFonts.getFont(
-                                  'Kavoon',
-                                  fontSize: 20,
-                                )),
+            isLoading
+                ? CircularProgressIndicator()
+                : StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('cart')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      }
+
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+
+                      // Get the cart items from the snapshot
+                      List<CartItem> cartItems = snapshot.data!.docs.map((doc) {
+                        return CartItem(
+                          documentId: doc['nama'],
+                          gambar: doc['gambar'],
+                          nama: doc['nama'],
+                          harga: (doc['harga']),
+                          jumlah: (doc['jumlah']),
+                        );
+                      }).toList();
+
+                      return GridView.builder(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 5,
+                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 20,
+                            childAspectRatio: 0.7,
                           ),
-                          Container(
-                            margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                            child: Text("Rp. 50.000",
-                                style: GoogleFonts.getFont(
-                                  'Inter',
-                                  fontSize: 20,
-                                )),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.remove_circle_outline_rounded,
-                              size: 40,
-                            )),
-                      ),
-                      Container(
-                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        child: Text(
-                          "3",
-                          style: TextStyle(fontSize: 30),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                        child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.add_circle_outline_sharp,
-                              size: 40,
-                            )),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10, 0, 0, 180),
-                        child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.highlight_remove_rounded,
-                              size: 40,
-                            )),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.fromLTRB(50, 50, 0, 0),
-                  height: 200,
-                  width: 500,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(width: 1, color: Colors.grey),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 1,
-                          offset: Offset(1, 2),
-                          spreadRadius: 0,
-                          color: Colors.black,
-                        ),
-                      ]),
-                ),
-              ],
-            ),
+                          shrinkWrap: true,
+                          itemCount: cartItems.length,
+                          itemBuilder: (context, index) {
+                            var item = cartItems[index];
+                            return Padding(
+                              padding: EdgeInsets.fromLTRB(40, 20, 0, 20),
+                              child: Container(
+                                // height: 250,
+                                // width: 275,
+                                padding: EdgeInsets.all(
+                                    16.0), // Adjust the padding as needed
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 1.0, color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(
+                                      10.0), // Adjust the border radius as needed
+                                ),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: 90,
+                                      width: 90,
+                                      child: Image.network(item.gambar),
+                                    ),
+                                    Text(
+                                      item.nama,
+                                      style: TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(height: 8.0),
+                                    Text(
+                                      'Harga: ${item.harga}, Jumlah: ${item.jumlah}',
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    SizedBox(height: 8.0),
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          item.jumlah.toString(),
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    }),
             Padding(
               padding: EdgeInsets.fromLTRB(0, 100, 0, 0),
               child: Container(
@@ -231,20 +292,28 @@ class _KeranjangState extends State<Keranjang> {
               child: Row(
                 children: [
                   Container(
-                      height: 100,
-                      width: 200,
-                      child: Text(
-                        "Meja No:",
-                        style: TextStyle(
-                            fontSize: 35, fontWeight: FontWeight.w600),
-                      )),
+                    height: 100,
+                    width: 200,
+                    child: Text(
+                      "Meja No:",
+                      style: TextStyle(
+                        fontSize: 35,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                   Container(
-                      margin: EdgeInsets.only(left: 600),
-                      height: 100,
-                      width: 100,
-                      child: Text("5",
-                          style: TextStyle(
-                              fontSize: 35, fontWeight: FontWeight.w600))),
+                    margin: EdgeInsets.only(left: 600),
+                    height: 100,
+                    width: 100,
+                    child: Text(
+                      "5",
+                      style: TextStyle(
+                        fontSize: 35,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -254,56 +323,6 @@ class _KeranjangState extends State<Keranjang> {
                 height: 1,
                 width: 1000,
                 color: Colors.black,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(400, 40, 0, 0),
-              child: Row(
-                children: [
-                  Container(
-                    width: 200,
-                    height: 70,
-                    child: Center(
-                        child: Text(
-                      "Batalkan",
-                      style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black),
-                    )),
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            width: 1, color: Color.fromRGBO(125, 25, 25, 1)),
-                        borderRadius: BorderRadius.circular(100)),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 40),
-                    child: InkWell(
-                      child: Container(
-                        width: 200,
-                        height: 70,
-                        child: Center(
-                            child: Text(
-                          "Konfirmasi",
-                          style: TextStyle(
-                              fontSize: 25,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.white),
-                        )),
-                        decoration: BoxDecoration(
-                            color: Color.fromRGBO(125, 25, 25, 1),
-                            border: Border.all(
-                                width: 1,
-                                color: Color.fromRGBO(125, 25, 25, 1)),
-                            borderRadius: BorderRadius.circular(100)),
-                      ),
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Struk()));
-                      },
-                    ),
-                  ),
-                ],
               ),
             ),
           ],

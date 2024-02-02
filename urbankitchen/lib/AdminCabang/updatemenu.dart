@@ -39,12 +39,20 @@ class _UpdateMenuState extends State<UpdateMenu> {
       setState(() {
         isLoading = true;
       });
-      int _hargaValue = int.parse(_harga.text);
+      int? _hargaValue;
+      if (selectedType != 'meja') {
+        _hargaValue = int.tryParse(_harga.text);
+      }
+      // Pastikan _jumlahkursi.text tidak kosong sebelum menyertakannya ke dalam data
+      String? jumlahKursiValue;
+      if (selectedType == 'meja' && _jumlahkursi.text.isNotEmpty) {
+        jumlahKursiValue = _jumlahkursi.text;
+      }
       final downloadURL = await ref.getDownloadURL();
       await FirebaseFirestore.instance.collection(selectedType).add({
         'nama': _nama.text,
         'harga': _hargaValue,
-        'jumlahkursi': _jumlahkursi.text,
+        'jumlahkursi': jumlahKursiValue,
         'keterangan': _keterangan.text,
         'gambar': _gambar.text = downloadURL,
       });
@@ -184,6 +192,13 @@ class _UpdateMenuState extends State<UpdateMenu> {
                       ),
                       TextFormField(
                         controller: _harga,
+                        validator: (value) {
+                          if (selectedType == 'meja' &&
+                              (value == null || value.isEmpty)) {
+                            return 'Jumlah kursi tidak boleh kosong';
+                          }
+                          return null;
+                        },
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: Colors.white70,
