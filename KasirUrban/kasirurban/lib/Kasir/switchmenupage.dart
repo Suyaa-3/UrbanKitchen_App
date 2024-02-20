@@ -208,58 +208,7 @@ class _switchmenuState extends State<switchmenu> {
                       itemBuilder: (BuildContext ctx, index) {
                         var data =
                             makananDocs[index].data() as Map<String, dynamic>;
-                        return InkWell(
-                          onTap: () {
-                            setState(() {
-                              switchValuesCemilannn[index] =
-                                  !switchValuesCemilannn[index];
-                              makananCollection.doc(makananDocs[index].id).set({
-                                'switch': switchValuesMakanannn[index],
-                              });
-                              if (switchValuesMakanan[index]) {
-                                // Jika switch aktif, tambahkan item ke dalam cart
-
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Pemberitahuan'),
-                                      content: Text('switch sedang aktif'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('OK'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              } else {
-                                // Jika switch non-aktif, beri peringatan atau lakukan tindakan lain
-                                // Misalnya, tampilkan pesan atau jalankan fungsi tertentu
-                                // Di sini, kita tambahkan efek blur pada card ketika switch non-aktif.
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Pemberitahuan'),
-                                      content: Text('Switch sedang non-aktif'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('OK'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            });
-                          },
+                        return Container(
                           child: Container(
                             width: 220,
                             height: 286,
@@ -287,9 +236,12 @@ class _switchmenuState extends State<switchmenu> {
                                       width: 180,
                                       height: 180,
                                       decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: NetworkImage(data['gambar']),
-                                        ),
+                                        image: data['gambar'] != null
+                                            ? DecorationImage(
+                                                image: NetworkImage(
+                                                    data['gambar']),
+                                              )
+                                            : null,
                                       ),
                                     ),
                                     Container(
@@ -378,53 +330,7 @@ class _switchmenuState extends State<switchmenu> {
                       itemBuilder: (BuildContext ctx, index) {
                         var data =
                             minumanDocs[index].data() as Map<String, dynamic>;
-                        return InkWell(
-                          onTap: () {
-                            setState(() {
-                              switchValues[index] = !switchValues[index];
-
-                              if (switchValuesMinuman[index]) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Pemberitahuan'),
-                                      content: Text('switch sedang aktif'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('OK'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              } else {
-                                // Jika switch non-aktif, beri peringatan atau lakukan tindakan lain
-                                // Misalnya, tampilkan pesan atau jalankan fungsi tertentu
-                                // Di sini, kita tambahkan efek blur pada card ketika switch non-aktif.
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Pemberitahuan'),
-                                      content: Text('Switch sedang non-aktif'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('OK'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            });
-                          },
+                        return Container(
                           child: Container(
                             width: 220,
                             height: 286,
@@ -543,55 +449,7 @@ class _switchmenuState extends State<switchmenu> {
                       itemBuilder: (BuildContext ctx, index) {
                         var data =
                             cemilanDocs[index].data() as Map<String, dynamic>;
-                        return InkWell(
-                          onTap: () {
-                            setState(() {
-                              switchValuesMakanannn[index] =
-                                  !switchValuesMakanannn[index];
-                              if (switchValuesCemilan[index]) {
-                                // Jika switch aktif, tambahkan item ke dalam cart
-
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Pemberitahuan'),
-                                      content: Text('switch sedang aktif'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('OK'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              } else {
-                                // Jika switch non-aktif, beri peringatan atau lakukan tindakan lain
-                                // Misalnya, tampilkan pesan atau jalankan fungsi tertentu
-                                // Di sini, kita tambahkan efek blur pada card ketika switch non-aktif.
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text('Pemberitahuan'),
-                                      content: Text('Switch sedang non-aktif'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: Text('OK'),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            });
-                          },
+                        return Container(
                           child: Container(
                             width: 220,
                             height: 286,

@@ -313,29 +313,6 @@ class _KasirMakananState extends State<KasirMakanan> {
                                         ),
                                       ),
                                     ),
-                                    Container(
-                                      margin: EdgeInsets.fromLTRB(0, 0, 150, 0),
-                                      child: InkWell(
-                                        child: Switch(
-                                          value: switchValuesMakanan[index],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              switchValuesMakanan[index] =
-                                                  value;
-                                              if (value) {
-                                                // Tambahkan item ke keranjang
-                                                cart.items.add(CartItem(
-                                                  nama: data['nama'],
-                                                  harga:
-                                                      int.parse(data['harga']),
-                                                  jumlah: 1,
-                                                ));
-                                              }
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),
