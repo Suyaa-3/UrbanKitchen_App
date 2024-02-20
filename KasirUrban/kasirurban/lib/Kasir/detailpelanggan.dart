@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kasirurban/Kasir/KasirKeranjang.dart';
 import 'package:kasirurban/Kasir/Kasirmeja.dart';
 import 'package:kasirurban/Kasir/Struk.dart';
 import 'package:kasirurban/Kasir/kasirmakanan.dart';
@@ -88,7 +89,12 @@ class _DetailPelangganState extends State<DetailPelanggan> {
               Padding(
                 padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const KasirKeranjang()));
+                  },
                   icon: Icon(Icons.shopping_bag_outlined, size: 50),
                 ),
               ),

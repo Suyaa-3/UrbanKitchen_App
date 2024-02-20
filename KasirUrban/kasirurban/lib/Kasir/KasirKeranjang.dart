@@ -164,7 +164,7 @@ class _KasirKeranjangState extends State<KasirKeranjang> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(350, 15, 0, 0),
+                  padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
                   child: IconButton(
                     onPressed: () {},
                     icon: Icon(

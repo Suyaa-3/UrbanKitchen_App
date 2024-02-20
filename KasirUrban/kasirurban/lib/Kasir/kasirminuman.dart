@@ -302,26 +302,6 @@ class _KasirMinumanState extends State<KasirMinuman> {
                                     ),
                                     Container(
                                       margin: EdgeInsets.fromLTRB(0, 0, 150, 0),
-                                      child: InkWell(
-                                        child: Switch(
-                                          value: switchValuesMinuman[index],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              switchValuesMinuman[index] =
-                                                  value;
-                                              if (value) {
-                                                // Tambahkan item ke keranjang
-                                                cart.items.add(CartItem(
-                                                  nama: data['nama'],
-                                                  harga:
-                                                      int.parse(data['harga']),
-                                                  jumlah: 1,
-                                                ));
-                                              }
-                                            });
-                                          },
-                                        ),
-                                      ),
                                     ),
                                   ],
                                 ),
