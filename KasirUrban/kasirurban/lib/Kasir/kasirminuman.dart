@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kasirurban/Kasir/KasirKeranjang.dart';
 import 'package:kasirurban/Kasir/Kasirmeja.dart';
 import 'package:kasirurban/Kasir/kasirmakanan.dart';
+import 'package:kasirurban/Kasir/switchmenupage.dart';
 
 class CartItem {
   final String nama;
@@ -49,7 +50,21 @@ class _KasirMinumanState extends State<KasirMinuman> {
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(500, 10, 350, 0),
+                  padding: EdgeInsets.fromLTRB(30, 15, 0, 0),
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const switchmenu()));
+                      },
+                      icon: Icon(
+                        Icons.list_alt_outlined,
+                        size: 50,
+                      )),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(400, 10, 350, 0),
                   child: Text(
                     "Urban Kitchen",
                     style: TextStyle(fontSize: 50, fontWeight: FontWeight.w600),
@@ -180,6 +195,7 @@ class _KasirMinumanState extends State<KasirMinuman> {
                           onTap: () {
                             setState(() {
                               switchValues[index] = !switchValues[index];
+
                               if (switchValuesMinuman[index]) {
                                 // Jika switch aktif, tambahkan item ke dalam cart
 

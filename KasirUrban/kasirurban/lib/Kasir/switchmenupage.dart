@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kasirurban/Kasir/KasirKeranjang.dart';
 import 'package:kasirurban/Kasir/Kasirmeja.dart';
+import 'package:kasirurban/Kasir/kasirmakanan.dart';
 import 'package:kasirurban/Kasir/kasirminuman.dart';
-import 'package:kasirurban/Kasir/switchmenupage.dart';
 import 'package:uuid/uuid.dart';
 
 class CartItem {
@@ -21,19 +21,22 @@ class Cart {
   List<CartItem> items = [];
 }
 
-class KasirMakanan extends StatefulWidget {
-  const KasirMakanan({Key? key}) : super(key: key);
+class switchmenu extends StatefulWidget {
+  const switchmenu({Key? key}) : super(key: key);
 
   @override
-  State<KasirMakanan> createState() => _KasirMakananState();
+  State<switchmenu> createState() => _switchmenuState();
 }
 
-class _KasirMakananState extends State<KasirMakanan> {
+class _switchmenuState extends State<switchmenu> {
   List<bool> switchValuesMakanan = List.generate(25, (index) => true);
   List<bool> switchValuesCemilan = List.generate(25, (index) => true);
   List<bool> switchValuesMakanannn = List.generate(25, (index) => true);
   List<bool> switchValuesCemilannn = List.generate(25, (index) => true);
+  List<bool> switchValuesMinuman = List.generate(25, (index) => true);
+  List<bool> switchValues = List.generate(25, (index) => true);
 
+  late CollectionReference minumanCollection;
   late CollectionReference makananCollection;
   late CollectionReference cemilanCollection;
 
@@ -44,6 +47,7 @@ class _KasirMakananState extends State<KasirMakanan> {
     super.initState();
     makananCollection = FirebaseFirestore.instance.collection('makanan');
     cemilanCollection = FirebaseFirestore.instance.collection('cemilan');
+    minumanCollection = FirebaseFirestore.instance.collection('minuman');
   }
 
   @override
@@ -209,24 +213,18 @@ class _KasirMakananState extends State<KasirMakanan> {
                             setState(() {
                               switchValuesCemilannn[index] =
                                   !switchValuesCemilannn[index];
+                              makananCollection.doc(makananDocs[index].id).set({
+                                'switch': switchValuesMakanannn[index],
+                              });
                               if (switchValuesMakanan[index]) {
                                 // Jika switch aktif, tambahkan item ke dalam cart
 
-                                FirebaseFirestore.instance
-                                    .collection('cart')
-                                    .doc()
-                                    .set({
-                                  'gambar': data['gambar'],
-                                  'nama': data['nama'],
-                                  'harga': data['harga'],
-                                  'jumlah': 1,
-                                });
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('Peringatan'),
-                                      content: Text('berhasil memasukan data'),
+                                      title: Text('Pemberitahuan'),
+                                      content: Text('switch sedang aktif'),
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () {
@@ -246,9 +244,8 @@ class _KasirMakananState extends State<KasirMakanan> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('Peringatan'),
-                                      content: Text(
-                                          'Switch non-aktif. Tidak dapat menambahkan item ke dalam keranjang.'),
+                                      title: Text('Pemberitahuan'),
+                                      content: Text('Switch sedang non-aktif'),
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () {
@@ -352,6 +349,171 @@ class _KasirMakananState extends State<KasirMakanan> {
               margin: EdgeInsets.only(left: 120),
               alignment: Alignment.centerLeft,
               child: Text(
+                "Minuman",
+                style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(70, 20, 70, 30),
+              child: FutureBuilder<QuerySnapshot>(
+                future: minumanCollection.get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('error: ${snapshot.error}');
+                  } else {
+                    var minumanDocs = snapshot.data!.docs;
+
+                    return GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 5,
+                        crossAxisSpacing: 20,
+                        mainAxisSpacing: 20,
+                        childAspectRatio: 0.7,
+                      ),
+                      itemCount: minumanDocs.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (BuildContext ctx, index) {
+                        var data =
+                            minumanDocs[index].data() as Map<String, dynamic>;
+                        return InkWell(
+                          onTap: () {
+                            setState(() {
+                              switchValues[index] = !switchValues[index];
+
+                              if (switchValuesMinuman[index]) {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Pemberitahuan'),
+                                      content: Text('switch sedang aktif'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              } else {
+                                // Jika switch non-aktif, beri peringatan atau lakukan tindakan lain
+                                // Misalnya, tampilkan pesan atau jalankan fungsi tertentu
+                                // Di sini, kita tambahkan efek blur pada card ketika switch non-aktif.
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('Pemberitahuan'),
+                                      content: Text('Switch sedang non-aktif'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: Text('OK'),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              }
+                            });
+                          },
+                          child: Container(
+                            width: 220,
+                            height: 286,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(width: 1, color: Colors.grey),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 3,
+                                  offset: Offset(1, 2),
+                                  spreadRadius: 1,
+                                  color: Colors.black,
+                                ),
+                              ],
+                            ),
+                            child: ClipRect(
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(
+                                  sigmaX: switchValuesMinuman[index] ? 0 : 130,
+                                  sigmaY: switchValuesMinuman[index] ? 0 : 130,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: 180,
+                                      height: 180,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: NetworkImage(data['gambar']),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        data['nama'],
+                                        style: GoogleFonts.getFont(
+                                          'Kavoon',
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      child: Text(
+                                        "Rp. ${data['harga']}",
+                                        style: GoogleFonts.getFont(
+                                          'Inter',
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.fromLTRB(0, 0, 150, 0),
+                                      child: InkWell(
+                                        child: Switch(
+                                          value: switchValuesMinuman[index],
+                                          onChanged: (value) {
+                                            setState(() {
+                                              switchValuesMinuman[index] =
+                                                  value;
+                                              if (value) {
+                                                // Tambahkan item ke keranjang
+                                                cart.items.add(CartItem(
+                                                  nama: data['nama'],
+                                                  harga:
+                                                      int.parse(data['harga']),
+                                                  jumlah: 1,
+                                                ));
+                                              }
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: 120),
+              alignment: Alignment.centerLeft,
+              child: Text(
                 "Cemilan",
                 style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
               ),
@@ -389,21 +551,12 @@ class _KasirMakananState extends State<KasirMakanan> {
                               if (switchValuesCemilan[index]) {
                                 // Jika switch aktif, tambahkan item ke dalam cart
 
-                                FirebaseFirestore.instance
-                                    .collection('cart')
-                                    .doc()
-                                    .set({
-                                  'gambar': data['gambar'],
-                                  'nama': data['nama'],
-                                  'harga': data['harga'],
-                                  'jumlah': 1,
-                                });
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('Peringatan'),
-                                      content: Text('berhasil memasukan data'),
+                                      title: Text('Pemberitahuan'),
+                                      content: Text('switch sedang aktif'),
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () {
@@ -423,9 +576,8 @@ class _KasirMakananState extends State<KasirMakanan> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AlertDialog(
-                                      title: Text('Peringatan'),
-                                      content: Text(
-                                          'Switch non-aktif. Tidak dapat menambahkan item ke dalam keranjang.'),
+                                      title: Text('Pemberitahuan'),
+                                      content: Text('Switch sedang non-aktif'),
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () {

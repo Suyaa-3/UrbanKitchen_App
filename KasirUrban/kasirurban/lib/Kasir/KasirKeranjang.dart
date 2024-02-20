@@ -5,6 +5,7 @@ import 'package:kasirurban/Kasir/Kasirmeja.dart';
 import 'package:kasirurban/Kasir/detailpelanggan.dart';
 import 'package:kasirurban/Kasir/kasirmakanan.dart';
 import 'package:kasirurban/Kasir/kasirminuman.dart';
+import 'package:kasirurban/Kasir/switchmenupage.dart';
 import 'package:provider/provider.dart';
 
 class CartItem {
@@ -142,7 +143,21 @@ class _KasirKeranjangState extends State<KasirKeranjang> {
             Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(500, 10, 0, 0),
+                  padding: EdgeInsets.fromLTRB(30, 15, 0, 0),
+                  child: IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const switchmenu()));
+                      },
+                      icon: Icon(
+                        Icons.list_alt_outlined,
+                        size: 50,
+                      )),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(400, 10, 350, 0),
                   child: Text(
                     "Urban Kitchen",
                     style: TextStyle(fontSize: 50, fontWeight: FontWeight.w600),

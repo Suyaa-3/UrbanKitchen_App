@@ -3,6 +3,7 @@ import 'package:kasirurban/Kasir/Kasirmeja.dart';
 import 'package:kasirurban/Kasir/Struk.dart';
 import 'package:kasirurban/Kasir/kasirmakanan.dart';
 import 'package:kasirurban/Kasir/kasirminuman.dart';
+import 'package:kasirurban/Kasir/switchmenupage.dart';
 
 class CartItem {
   final String documentId;
@@ -64,14 +65,28 @@ class _DetailPelangganState extends State<DetailPelanggan> {
           Row(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(500, 10, 0, 0),
+                padding: EdgeInsets.fromLTRB(30, 15, 0, 0),
+                child: IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const switchmenu()));
+                    },
+                    icon: Icon(
+                      Icons.list_alt_outlined,
+                      size: 50,
+                    )),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(400, 10, 350, 0),
                 child: Text(
                   "Urban Kitchen",
                   style: TextStyle(fontSize: 50, fontWeight: FontWeight.w600),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.fromLTRB(350, 15, 0, 0),
+                padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
                 child: IconButton(
                   onPressed: () {},
                   icon: Icon(Icons.shopping_bag_outlined, size: 50),

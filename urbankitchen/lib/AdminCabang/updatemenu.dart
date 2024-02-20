@@ -49,13 +49,23 @@ class _UpdateMenuState extends State<UpdateMenu> {
         jumlahKursiValue = _jumlahkursi.text;
       }
       final downloadURL = await ref.getDownloadURL();
-      await FirebaseFirestore.instance.collection(selectedType).add({
-        'nama': _nama.text,
-        'harga': _hargaValue,
-        'jumlahkursi': jumlahKursiValue,
-        'keterangan': _keterangan.text,
-        'gambar': _gambar.text = downloadURL,
-      });
+
+      if (selectedType == 'meja') {
+        await FirebaseFirestore.instance.collection(selectedType).add({
+          'nama': _nama.text,
+          'jumlahkursi': _jumlahkursi.text,
+          'keterangan': _keterangan.text,
+          'gambar': downloadURL,
+        });
+      } else {
+        await FirebaseFirestore.instance.collection(selectedType).add({
+          'nama': _nama.text,
+          'harga': _hargaValue,
+          'keterangan': _keterangan.text,
+          'gambar': downloadURL,
+        });
+      }
+
       setState(() {
         isLoading = false;
       });
@@ -191,7 +201,8 @@ class _UpdateMenuState extends State<UpdateMenu> {
                         height: 30,
                       ),
                       TextFormField(
-                        controller: _harga,
+                        controller:
+                            selectedType == 'meja' ? _jumlahkursi : _harga,
                         validator: (value) {
                           if (selectedType == 'meja' &&
                               (value == null || value.isEmpty)) {

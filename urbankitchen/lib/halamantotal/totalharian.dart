@@ -58,20 +58,42 @@ class _TotalHarianState extends State<TotalHarian> {
               pw.Text("Laporan Keuangan Harian",
                   style: pw.TextStyle(
                       fontWeight: pw.FontWeight.bold, fontSize: 16)),
-              pw.Text("Pemasukan    : Rp.$pemasukan"),
-              pw.Text("Pengeluaran    : Rp.$pengeluaran"),
-              pw.Text(
-                  "Total    : Rp.30.000.000"), // Update this line with the actual total
-              pw.Text("Hasil Bersih   : Rp.-"),
+              pw.SizedBox(height: 12), // Spasi antara judul dan tabel
+
+              // Tabel
+              pw.Table.fromTextArray(
+                border: null, // Tidak ada border di sekitar tabel
+                headerAlignment: pw.Alignment.centerLeft,
+                cellAlignment: pw.Alignment.centerLeft,
+                headerDecoration: pw.BoxDecoration(
+                  color: PdfColors.grey300,
+                ),
+                headerHeight: 25,
+                cellHeight: 30,
+                cellAlignments: {
+                  0: pw.Alignment.centerLeft,
+                  1: pw.Alignment.centerLeft,
+                },
+                headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                data: [
+                  ['Jenis', 'Nominal'],
+                  ['Pemasukan', 'Rp.$pemasukan'],
+                  ['Pengeluaran', 'Rp.$pengeluaran'],
+                  ['Total', 'Rp.30.000.000'],
+                  ['Hasil Bersih', 'Rp.-'],
+                ],
+              ),
             ],
           );
         },
       ),
     );
 
+    final fileName = "laporan_keuangan_${_dateController.text}.pdf";
     final output = await getExternalStorageDirectory();
-    final file = File("${output!.path}/laporan_keuangan $_dateController.pdf");
+    final file = File("${output!.path}/$fileName");
     await file.writeAsBytes(await pdf.save());
+
     print("Path File: ${file.path}");
 
     await showDialog(
