@@ -191,7 +191,8 @@ class _KasirMinumanState extends State<KasirMinuman> {
                       itemBuilder: (BuildContext ctx, index) {
                         var data =
                             minumanDocs[index].data() as Map<String, dynamic>;
-                        return InkWell(
+                        return InkWell
+                        (
                           onTap: () {
                             setState(() {
                               switchValues[index] = !switchValues[index];

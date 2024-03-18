@@ -4,10 +4,12 @@ import 'package:urbankitchen/AdminCabang/ProfilAdminCabang.dart';
 import 'package:urbankitchen/AdminCabang/updatemenu.dart';
 import 'package:urbankitchen/SuperAdmin/SuperAdminHome.dart';
 import 'package:urbankitchen/SuperAdmin/detailadmin.dart';
+import 'package:urbankitchen/SuperAdmin/listadmin.dart';
+import 'package:urbankitchen/akun/Register.dart';
 import 'package:urbankitchen/akun/login.dart';
 import 'package:urbankitchen/firebase_options.dart';
 
-import 'package:urbankitchen/halamantotal/totalharian.dart';
+import 'package:urbankitchen/AdminCabang/halamantotal/totalharian.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +47,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: UpdateMenu());
+        home: LoginAdmin());
   }
 }
 

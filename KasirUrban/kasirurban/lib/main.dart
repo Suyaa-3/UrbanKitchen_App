@@ -4,6 +4,7 @@ import 'package:kasirurban/Kasir/KasirKeranjang.dart';
 import 'package:kasirurban/Kasir/Struk.dart';
 import 'package:kasirurban/Kasir/detailpelanggan.dart';
 import 'package:kasirurban/Kasir/kasirmakanan.dart';
+import 'package:kasirurban/Kasir/login.dart';
 import 'package:kasirurban/firebase_options.dart';
 import 'package:provider/provider.dart';
 
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: DetailPelanggan(),
+      home: LoginKasir(),
     );
   }
 }

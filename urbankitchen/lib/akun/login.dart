@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:urbankitchen/AdminCabang/ProfilAdminCabang.dart';
+import 'package:urbankitchen/AdminCabang2/ProfilAdminCabang.dart';
 import 'package:urbankitchen/SuperAdmin/SuperAdminHome.dart';
 import 'package:urbankitchen/SuperAdmin/detailadmin.dart';
 import 'package:urbankitchen/akun/Register.dart';
+import 'package:urbankitchen/akun/waitpage.dart';
 
 class LoginAdmin extends StatefulWidget {
   const LoginAdmin({super.key});
@@ -19,34 +22,55 @@ class _LoginAdminState extends State<LoginAdmin> {
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
 
-  signInWithEmailAndPassword() async {
-    try {
-      setState(() {
-        isLoading = true;
-      });
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _email.text,
-        password: _password.text,
-      );
-      if (userCredential.user?.email == "admin123@gmail.com") {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => Superadminhomepage()));
-      } else {
+signInWithEmailAndPassword() async {
+  try {
+    setState(() {
+      isLoading = true;
+    });
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _email.text,
+      password: _password.text,
+    );
+
+    // Mengambil data pengguna dari Firestore
+    final userDoc = await FirebaseFirestore.instance
+        .collection('akunadmin')
+        .doc(userCredential.user?.uid)
+        .get();
+
+    final userData = userDoc.data();
+
+    // Memeriksa peran pengguna
+    if (userData != null && userData['role'] != null) {
+      String role = userData['role'];
+      if (role == 'manajer1') {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => AdminCabang()));
+      } else if (role == 'manajer2') {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => AdminCabang2()));
+      } else {
+        // Jika peran tidak ditemukan atau kosong
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => WaitPage()));
       }
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-      return ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("wrong password or email"),
-        ),
-      );
+    } else {
+      // Jika data pengguna atau peran tidak ditemukan
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => WaitPage()));
     }
+  } catch (e) {
+    setState(() {
+      isLoading = false;
+    });
+    return ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("wrong password or email"),
+      ),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -192,34 +216,37 @@ class _LoginAdminState extends State<LoginAdmin> {
                 ),
                 Container(
                   child: Center(
-                    child: TextButton(
-                      child: Text(
-                        "LOGIN",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                          backgroundColor: Color.fromRGBO(125, 25, 25, 1),
-                          fontWeight: FontWeight.bold,
+                     child: 
+                     isLoading
+                      ? CircularProgressIndicator() // Tampilkan indikator loading
+                      : TextButton(
+                          child: Text(
+                            "LOGIN",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              backgroundColor: Color.fromRGBO(125, 25, 25, 1),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: TextButton.styleFrom(
+                            primary: Color.fromRGBO(125, 25, 25, 1),
+                          ),
+                          onPressed: () {
+                            if (_loginkey.currentState!.validate()) {
+                              signInWithEmailAndPassword();
+                            }
+                          },
                         ),
-                      ),
-                      style: TextButton.styleFrom(
-                        primary: Color.fromRGBO(125, 25, 25, 1),
-                      ),
-                      onPressed: () {
-                        if (_loginkey.currentState!.validate()) {
-                          signInWithEmailAndPassword();
-                        }
-                      },
-                    ),
-                  ),
-                  height: 40,
-                  width: 220,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(40)),
-                    color: Color.fromRGBO(125, 25, 25, 1),
-                  ),
                 ),
+                height: 40,
+                width: 220,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(40)),
+                  color: Color.fromRGBO(125, 25, 25, 1),
+                ),
+              ),
                 SizedBox(
                   height: 15,
                 ),
